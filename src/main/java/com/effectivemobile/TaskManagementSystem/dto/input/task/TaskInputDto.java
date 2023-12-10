@@ -1,8 +1,5 @@
-package com.effectivemobile.TaskManagementSystem.dto;
+package com.effectivemobile.TaskManagementSystem.dto.input.task;
 
-import com.effectivemobile.TaskManagementSystem.model.Priority;
-import com.effectivemobile.TaskManagementSystem.model.Status;
-import com.effectivemobile.TaskManagementSystem.model.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -12,7 +9,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class TaskUpdateDto {
+public class TaskInputDto {
 
     @NotNull(message = "Title text must not be empty!")
     @Size(min = 10, max = 128, message = "Title size must be between 10 and 128!")

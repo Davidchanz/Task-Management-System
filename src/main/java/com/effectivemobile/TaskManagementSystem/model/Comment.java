@@ -1,6 +1,7 @@
 package com.effectivemobile.TaskManagementSystem.model;
 
 
+import com.effectivemobile.TaskManagementSystem.dto.input.comment.CommentInputDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "COMMENTS")
@@ -29,8 +32,12 @@ public class Comment {
     @NotNull
     private String text;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private User author;
+
+    @ToString.Exclude
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Task task;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
@@ -39,4 +46,8 @@ public class Comment {
     @Column(nullable = false)
     @UpdateTimestamp
     private Instant lastUpdatedOn;
+
+    public Comment(CommentInputDto commentInputDto){
+        this.setText(commentInputDto.getText());
+    }
 }

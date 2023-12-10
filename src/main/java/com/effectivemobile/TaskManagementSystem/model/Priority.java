@@ -1,6 +1,7 @@
 package com.effectivemobile.TaskManagementSystem.model;
 
 
+import com.effectivemobile.TaskManagementSystem.dto.PriorityDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -21,7 +22,11 @@ public class Priority {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(nullable = false, length = 32)
+    @Column(unique = true, nullable = false, length = 32)
     @NotNull
     private String name;
+
+    public Priority(PriorityDto priorityDto){
+        this.setName(priorityDto.getName());
+    }
 }

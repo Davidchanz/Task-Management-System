@@ -1,6 +1,6 @@
 package com.effectivemobile.TaskManagementSystem.service;
 
-import com.effectivemobile.TaskManagementSystem.dto.user.UserAuthDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.user.UserAuthDto;
 import com.effectivemobile.TaskManagementSystem.exception.exist.EmailAlreadyExistException;
 import com.effectivemobile.TaskManagementSystem.exception.exist.UserAlreadyExistException;
 import com.effectivemobile.TaskManagementSystem.mapper.UserMapper;

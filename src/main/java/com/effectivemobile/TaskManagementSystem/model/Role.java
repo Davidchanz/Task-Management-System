@@ -1,32 +1,28 @@
 package com.effectivemobile.TaskManagementSystem.model;
 
-
-import com.effectivemobile.TaskManagementSystem.dto.StatusDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table
+@Table(name = "ROLES")
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor
-public class Status {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 32)
+    @Column(unique = true, nullable = false, length = 25)
     @NotNull
     private String name;
 
-    public Status(StatusDto statusDto){
-        this.setName(statusDto.getName());
-    }
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private User user;
+
 }

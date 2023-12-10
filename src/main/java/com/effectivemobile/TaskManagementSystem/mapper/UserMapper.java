@@ -1,6 +1,6 @@
 package com.effectivemobile.TaskManagementSystem.mapper;
 
-import com.effectivemobile.TaskManagementSystem.dto.user.UserAuthDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.user.UserAuthDto;
 import com.effectivemobile.TaskManagementSystem.model.User;
 import org.mapstruct.*;
 

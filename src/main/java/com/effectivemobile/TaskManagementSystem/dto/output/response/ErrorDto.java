@@ -1,4 +1,4 @@
-package com.effectivemobile.TaskManagementSystem.dto.response;
+package com.effectivemobile.TaskManagementSystem.dto.output.response;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

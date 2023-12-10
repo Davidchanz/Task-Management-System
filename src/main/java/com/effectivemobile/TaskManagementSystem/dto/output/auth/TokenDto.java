@@ -1,4 +1,4 @@
-package com.effectivemobile.TaskManagementSystem.dto.auth;
+package com.effectivemobile.TaskManagementSystem.dto.output.auth;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

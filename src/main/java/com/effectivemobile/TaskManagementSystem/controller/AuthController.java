@@ -1,9 +1,9 @@
 package com.effectivemobile.TaskManagementSystem.controller;
 
-import com.effectivemobile.TaskManagementSystem.dto.response.ApiResponseSingleOk;
-import com.effectivemobile.TaskManagementSystem.dto.auth.LoginDto;
-import com.effectivemobile.TaskManagementSystem.dto.auth.TokenDto;
-import com.effectivemobile.TaskManagementSystem.dto.user.UserAuthDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.response.ApiResponseSingleOk;
+import com.effectivemobile.TaskManagementSystem.dto.input.auth.LoginDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.auth.TokenDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.user.UserAuthDto;
 import com.effectivemobile.TaskManagementSystem.exception.RequiredRequestParamIsMissingException;
 import com.effectivemobile.TaskManagementSystem.exception.auth.UserLoginException;
 import com.effectivemobile.TaskManagementSystem.model.CustomUserDetails;

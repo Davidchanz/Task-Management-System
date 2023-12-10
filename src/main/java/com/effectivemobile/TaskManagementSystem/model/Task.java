@@ -1,6 +1,6 @@
 package com.effectivemobile.TaskManagementSystem.model;
 
-import com.effectivemobile.TaskManagementSystem.dto.TaskUpdateDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.task.TaskInputDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -34,26 +34,20 @@ public class Task {
     @NotNull
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private User author;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private User executor;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Status status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Priority priority;
 
     @ToString.Exclude
-    @ManyToMany(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "TASK_COMMENTS",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
     @Column(nullable = false, updatable = false)
@@ -64,8 +58,8 @@ public class Task {
     @UpdateTimestamp
     private Instant lastUpdatedOn;
 
-    public Task(TaskUpdateDto taskUpdateDto) {
-        this.setDescription(taskUpdateDto.getDescription());
-        this.setTitle(taskUpdateDto.getTitle());
+    public Task(TaskInputDto taskInputDto) {
+        this.setDescription(taskInputDto.getDescription());
+        this.setTitle(taskInputDto.getTitle());
     }
 }

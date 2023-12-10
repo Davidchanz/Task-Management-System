@@ -1,6 +1,6 @@
 package com.effectivemobile.TaskManagementSystem.mapper;
 
-import com.effectivemobile.TaskManagementSystem.dto.TaskUpdateDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.task.TaskInputDto;
 import com.effectivemobile.TaskManagementSystem.model.Task;
 import org.mapstruct.*;
 
@@ -12,5 +12,5 @@ public interface TaskMapper {
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "priority", ignore = true)
     @Mapping(target = "executor", ignore = true)
-    void updateTaskFromDto(TaskUpdateDto dto, @MappingTarget Task entity);
+    void updateTaskFromDto(TaskInputDto dto, @MappingTarget Task entity);
 }

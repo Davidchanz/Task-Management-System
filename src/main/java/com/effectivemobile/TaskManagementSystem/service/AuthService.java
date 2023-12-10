@@ -1,6 +1,6 @@
 package com.effectivemobile.TaskManagementSystem.service;
 
-import com.effectivemobile.TaskManagementSystem.dto.auth.LoginDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.auth.LoginDto;
 import com.effectivemobile.TaskManagementSystem.model.CustomUserDetails;
 import com.effectivemobile.TaskManagementSystem.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;

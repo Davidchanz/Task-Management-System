@@ -7,9 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,16 +23,24 @@ public class CustomUserDetails implements UserDetails {
 
     private String email;
 
+    private List<GrantedAuthority> authorities = new ArrayList<>();
+
     public CustomUserDetails(User user){
-        id = user.getId();
-        username = user.getUsername();
-        password = user.getPassword();
-        email = user.getEmail();
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.addAuthorities(user.getRoles());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("read"));
+        return authorities;
+    }
+
+    public void addAuthorities(Collection<Role> roles){
+        this.authorities.add(new SimpleGrantedAuthority("USER"));
+        this.authorities.addAll(roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList());
     }
 
     @Override

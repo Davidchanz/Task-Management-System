@@ -41,6 +41,10 @@ public class User {
     private Instant createdOn;
 
     @ToString.Exclude
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Role> roles = new HashSet<>();
+
+    @ToString.Exclude
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Task> tasks = new HashSet<>();
 }

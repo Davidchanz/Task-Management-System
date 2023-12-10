@@ -1,6 +1,6 @@
 package com.effectivemobile.TaskManagementSystem.validation;
 
-import com.effectivemobile.TaskManagementSystem.dto.user.UserAuthDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.user.UserAuthDto;
 import com.effectivemobile.TaskManagementSystem.validation.annotation.PasswordMatches;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

@@ -1,9 +1,10 @@
-package com.effectivemobile.TaskManagementSystem.dto;
+package com.effectivemobile.TaskManagementSystem.dto.output.comment;
 
-import com.effectivemobile.TaskManagementSystem.dto.user.UserDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.user.UserDto;
 import com.effectivemobile.TaskManagementSystem.model.Comment;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -12,6 +13,7 @@ import java.time.Instant;
 @Setter
 @Getter
 @ToString
+@NoArgsConstructor
 public class CommentDto {
     @NotNull
     private Long id;

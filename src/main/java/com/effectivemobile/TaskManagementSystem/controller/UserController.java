@@ -1,9 +1,9 @@
 package com.effectivemobile.TaskManagementSystem.controller;
 
-import com.effectivemobile.TaskManagementSystem.dto.response.ApiResponse;
-import com.effectivemobile.TaskManagementSystem.dto.response.ApiResponseSingleOk;
-import com.effectivemobile.TaskManagementSystem.dto.user.UserAuthDto;
-import com.effectivemobile.TaskManagementSystem.dto.user.UserDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.response.ApiResponse;
+import com.effectivemobile.TaskManagementSystem.dto.output.response.ApiResponseSingleOk;
+import com.effectivemobile.TaskManagementSystem.dto.input.user.UserAuthDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.user.UserDto;
 import com.effectivemobile.TaskManagementSystem.exception.RequiredRequestParamIsMissingException;
 import com.effectivemobile.TaskManagementSystem.service.UserService;
 import jakarta.validation.Valid;

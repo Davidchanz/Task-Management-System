@@ -1,9 +1,15 @@
 package com.effectivemobile.TaskManagementSystem.controller;
 
-import com.effectivemobile.TaskManagementSystem.dto.*;
-import com.effectivemobile.TaskManagementSystem.dto.response.ApiResponse;
-import com.effectivemobile.TaskManagementSystem.dto.response.ApiResponseSingleOk;
+import com.effectivemobile.TaskManagementSystem.dto.StatusDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.task.TaskInputDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.comment.CommentDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.response.ApiResponse;
+import com.effectivemobile.TaskManagementSystem.dto.output.response.ApiResponseSingleOk;
+import com.effectivemobile.TaskManagementSystem.dto.output.task.TaskDto;
+import com.effectivemobile.TaskManagementSystem.exception.AccessToResourceDeniedException;
+import com.effectivemobile.TaskManagementSystem.exception.PageIllegalArgumentException;
 import com.effectivemobile.TaskManagementSystem.exception.RequiredRequestParamIsMissingException;
+import com.effectivemobile.TaskManagementSystem.exception.notFound.PageNotFoundException;
 import com.effectivemobile.TaskManagementSystem.model.Comment;
 import com.effectivemobile.TaskManagementSystem.model.Task;
 import com.effectivemobile.TaskManagementSystem.model.User;
@@ -13,16 +19,21 @@ import com.effectivemobile.TaskManagementSystem.service.TaskService;
 import com.effectivemobile.TaskManagementSystem.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/task")
 public class TaskController {
 
     @Autowired
@@ -37,127 +48,103 @@ public class TaskController {
     @Autowired
     public PriorityService priorityService;
 
-    @GetMapping("/task/{id}")
+    @Value("${app.page.size}")
+    private Integer pageSize;
+
+    @GetMapping("/{id}")
     public ResponseEntity<TaskDto> getTask(@Valid @PathVariable Long id){
         return new ResponseEntity<>(new TaskDto(taskService.findTaskById(id)), HttpStatus.OK);
     }
 
-    @PostMapping("/task/add")
-    public ResponseEntity<TaskDto> addNewTask(@Valid @RequestBody(required = false) TaskUpdateDto taskUpdateDto, Principal principal){
-        if(taskUpdateDto == null)
-            throw new RequiredRequestParamIsMissingException("Required request param TaskUpdateDto is missing");
+    @PostMapping("/add")
+    public ResponseEntity<TaskDto> addNewTask(@Valid @RequestBody(required = false) TaskInputDto taskInputDto, Principal principal){
+        if(taskInputDto == null)
+            throw new RequiredRequestParamIsMissingException("Required request param TaskInputDto is missing");
 
-        Task task = new Task(taskUpdateDto);
+        Task task = new Task(taskInputDto);
         task.setAuthor(userService.findUserByUserName(principal.getName()));
-        task.setExecutor(userService.findUserByUserName(taskUpdateDto.getExecutor()));
-        task.setStatus(statusService.findStatusById(taskUpdateDto.getStatus()));
-        task.setPriority(priorityService.findPriorityById(taskUpdateDto.getPriority()));
+        task.setExecutor(userService.findUserByUserName(taskInputDto.getExecutor()));
+        task.setStatus(statusService.findStatusById(taskInputDto.getStatus()));
+        task.setPriority(priorityService.findPriorityById(taskInputDto.getPriority()));
         taskService.addNewTask(task);
         return new ResponseEntity<>(new TaskDto(task), HttpStatus.OK);
     }
 
-    @PutMapping("/task/update/{id}")
-    public ResponseEntity<ApiResponse> updateTask(@Valid @PathVariable Long id, @Valid @RequestBody(required = false) TaskUpdateDto taskUpdateDto, Principal principal){
-        if(taskUpdateDto == null)
-            throw new RequiredRequestParamIsMissingException("Required request param TaskUpdateDto is missing");
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ApiResponse> updateTask(@Valid @PathVariable Long id, @Valid @RequestBody(required = false) TaskInputDto taskInputDto, Principal principal){
+        if(taskInputDto == null)
+            throw new RequiredRequestParamIsMissingException("Required request param TaskInputDto is missing");
         User currentUser = userService.findUserByUserName(principal.getName());
-
-        taskService.updateTask(currentUser, id, taskUpdateDto);
-        return new ResponseEntity<>(new ApiResponseSingleOk("Update Task", "Task [" + taskUpdateDto.getTitle() + "] was updated"), HttpStatus.OK);
+        Task task = taskService.findTaskById(id);
+        task.setExecutor(userService.findUserByUserName(taskInputDto.getExecutor()));
+        task.setStatus(statusService.findStatusById(taskInputDto.getStatus()));
+        task.setPriority(priorityService.findPriorityById(taskInputDto.getPriority()));
+        taskService.updateTask(currentUser, task, taskInputDto);
+        return new ResponseEntity<>(new ApiResponseSingleOk("Update Task", "Task [" + taskInputDto.getTitle() + "] was updated"), HttpStatus.OK);
     }
 
-    @DeleteMapping("/task/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteTask(@Valid @PathVariable Long id, Principal principal){
         User currentUser = userService.findUserByUserName(principal.getName());
         Task task = taskService.deleteTask(currentUser, id);
         return new ResponseEntity<>(new ApiResponseSingleOk("Delete Task", "Task [" + task.getTitle() + "] was deleted!"), HttpStatus.OK);
     }
 
-    @GetMapping("/task/author/{id}")
-    public ResponseEntity<List<TaskDto>> getTasksByAuthor(@Valid @PathVariable String username){
+    @GetMapping("/author/{username}")
+    public ResponseEntity<List<TaskDto>> getTasksByAuthor(@Valid @PathVariable String username, @Valid @RequestParam(defaultValue = "0", name = "page") Integer page){
+        if(page < 0)
+            throw new PageIllegalArgumentException("Page index must not be less than zero");
+
+        Pageable pageable = PageRequest.of(page, pageSize);
         User author = userService.findUserByUserName(username);
-        List<Task> tasks = taskService.findTasksByAuthor(author);
-        var result = tasks
+        Page<Task> tasksPage = taskService.findTasksByAuthor(author, pageable);
+
+        if(page > tasksPage.getTotalPages()-1)
+            throw new PageNotFoundException("Tasks Page number [" + page + "] not found!");
+
+        var result = tasksPage.getContent()
                 .stream()
                 .map(TaskDto::new)
                 .toList();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/task/executor/{id}")
-    public ResponseEntity<List<TaskDto>> getTasksByExecutor(@Valid @PathVariable String username){
+    @GetMapping("/executor/{username}")
+    public ResponseEntity<List<TaskDto>> getTasksByExecutor(
+            @Valid @PathVariable String username,
+            @Valid @RequestParam(defaultValue = "0", name = "page") Integer page){
+
+        if(page < 0)
+            throw new PageIllegalArgumentException("Page index must not be less than zero");
+
+        Pageable pageable = PageRequest.of(page, pageSize);
         User executor = userService.findUserByUserName(username);
-        List<Task> tasks = taskService.findTasksByExecutor(executor);
-        var result = tasks
+        Page<Task> tasksPage = taskService.findTasksByExecutor(executor, pageable);
+
+        if(page > tasksPage.getTotalPages()-1)
+            throw new PageNotFoundException("Tasks Page number [" + page + "] not found!");
+
+
+        var result = tasksPage.getContent()
                 .stream()
                 .map(TaskDto::new)
                 .toList();
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/task/comments/{id}")
-    public ResponseEntity<List<CommentDto>> getTaskComments(@Valid @PathVariable Long id){
-        Set<Comment> comments = taskService.findTaskCommentsById(id);
-        var result = comments
-                .stream()
-                .map(CommentDto::new)
-                .toList();
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    /*@PostMapping("/task/vote/up/{id}")
-    public ResponseEntity<ApiResponse> upVote(@Valid @PathVariable Long id, Principal principal){
+    @PutMapping("/update/status/{id}")
+    public ResponseEntity<ApiResponse> updateTaskStatusByExecutor(@Valid @PathVariable Long id, @Valid @RequestBody(required = false) StatusDto statusDto, Principal principal){
+        if(statusDto == null)
+            throw new RequiredRequestParamIsMissingException("Required request param StatusDto is missing");
         User currentUser = userService.findUserByUserName(principal.getName());
         Task task = taskService.findTaskById(id);
-        quoteStateService.addUpVoteQuoteState(task, currentUser);
-        return new ResponseEntity<>(new ApiResponseSingleOk("Up Vote", "Up Vote for Quote [" + task.getText() + "] by user [" + currentUser.getUsername() + "]"), HttpStatus.OK);
+        if(!Objects.equals(task.getExecutor().getId(), currentUser.getId()))
+            throw new AccessToResourceDeniedException("You don't have rights to delete Task with id [" + id + "]");
+
+        task.setStatus(statusService.findStatusByName(statusDto.getName()));
+        taskService.saveTask(task);
+        return new ResponseEntity<>(new ApiResponseSingleOk("Update Task Status", "Task [" + task.getTitle() + "] status was updated"), HttpStatus.OK);
     }
 
-    @PostMapping("/quote/vote/down/{id}")
-    public ResponseEntity<ApiResponse> downVote(@Valid @PathVariable Long id, Principal principal){
-        User currentUser = userService.findUserByUserName(principal.getName());
-        Task task = taskService.findTaskById(id);
-        quoteStateService.addDownVoteQuoteState(task, currentUser);
-        return new ResponseEntity<>(new ApiResponseSingleOk("Down Vote", "Down Vote for Quote [" + task.getText() + "] by user [" + currentUser.getUsername() + "]"), HttpStatus.OK);
-    }
-
-    @GetMapping("/quote/top10")
-    public ResponseEntity<List<TaskDto>> getTop10Quotes(){
-        var top10Quotes = quoteStateService.getTop10QuoteStates()
-                .stream()
-                .map(quoteStateDto ->
-                        new TaskDto(quoteStateDto.getTask()))
-                .toList();
-        return new ResponseEntity<>(top10Quotes, HttpStatus.OK);
-    }
-
-    @GetMapping("/quote/worse10")
-    public ResponseEntity<List<TaskDto>> getWorse10Quotes(){
-        var top10Quotes = quoteStateService.getWorse10QuoteStates()
-                .stream()
-                .map(quoteStateDto ->
-                        new TaskDto(quoteStateDto.getTask()))
-                .toList();
-        return new ResponseEntity<>(top10Quotes, HttpStatus.OK);
-    }
-
-    @GetMapping("/quote/graph/{id}")
-    public ResponseEntity<GraphDto> getQuoteGraph(@Valid @PathVariable Long id){
-        Task task = taskService.findTaskById(id);
-        var votes = quoteStateService.getQuoteVoteGraphData(task);
-        GraphDto graphDto = new GraphDto();
-        List<VoteDto> data = new ArrayList<>();
-        int rating = 0;
-        data.add(new VoteDto(task.getCreatedOn(), rating));
-        for(var vote: votes){
-            rating += vote.getVoteValue();
-            data.add(new VoteDto(vote.getVotedOn(), rating));
-        }
-        graphDto.setData(data);
-        graphDto.setMaxRating(data.get(data.size()-1).getVoteValue());
-        graphDto.setMinRating(data.get(0).getVoteValue());
-        graphDto.setMaxTime(data.get(data.size()-1).getVotedOn());
-        graphDto.setMinTime(data.get(0).getVotedOn());
-        return new ResponseEntity<>(graphDto, HttpStatus.OK);
-    }*/
 }

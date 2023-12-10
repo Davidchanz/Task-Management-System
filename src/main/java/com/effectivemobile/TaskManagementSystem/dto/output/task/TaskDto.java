@@ -1,6 +1,8 @@
-package com.effectivemobile.TaskManagementSystem.dto;
+package com.effectivemobile.TaskManagementSystem.dto.output.task;
 
-import com.effectivemobile.TaskManagementSystem.dto.user.UserDto;
+import com.effectivemobile.TaskManagementSystem.dto.PriorityDto;
+import com.effectivemobile.TaskManagementSystem.dto.StatusDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.user.UserDto;
 import com.effectivemobile.TaskManagementSystem.model.Task;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

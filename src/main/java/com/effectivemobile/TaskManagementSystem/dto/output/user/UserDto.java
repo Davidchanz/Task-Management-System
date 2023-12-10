@@ -1,4 +1,4 @@
-package com.effectivemobile.TaskManagementSystem.dto.user;
+package com.effectivemobile.TaskManagementSystem.dto.output.user;
 
 import com.effectivemobile.TaskManagementSystem.model.User;
 import jakarta.validation.constraints.NotNull;

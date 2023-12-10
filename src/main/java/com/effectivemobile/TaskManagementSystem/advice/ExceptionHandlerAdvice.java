@@ -1,14 +1,14 @@
 package com.effectivemobile.TaskManagementSystem.advice;
 
-import com.effectivemobile.TaskManagementSystem.dto.response.ApiErrorDto;
-import com.effectivemobile.TaskManagementSystem.dto.response.ErrorDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.response.ApiErrorDto;
+import com.effectivemobile.TaskManagementSystem.dto.output.response.ErrorDto;
 import com.effectivemobile.TaskManagementSystem.exception.*;
 import com.effectivemobile.TaskManagementSystem.exception.auth.UserLoginException;
 import com.effectivemobile.TaskManagementSystem.exception.exist.EmailAlreadyExistException;
+import com.effectivemobile.TaskManagementSystem.exception.exist.PriorityAlreadyExistException;
+import com.effectivemobile.TaskManagementSystem.exception.exist.StatusAlreadyExistException;
 import com.effectivemobile.TaskManagementSystem.exception.exist.UserAlreadyExistException;
-import com.effectivemobile.TaskManagementSystem.exception.notFound.PriorityNotFoundException;
-import com.effectivemobile.TaskManagementSystem.exception.notFound.StatusNotFoundException;
-import com.effectivemobile.TaskManagementSystem.exception.notFound.TaskNotFoundException;
+import com.effectivemobile.TaskManagementSystem.exception.notFound.*;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -76,7 +76,9 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {
             UserAlreadyExistException.class,
-            EmailAlreadyExistException.class
+            EmailAlreadyExistException.class,
+            PriorityAlreadyExistException.class,
+            StatusAlreadyExistException.class
     })
     @ResponseStatus(HttpStatus.CONFLICT)
     protected ResponseEntity<Object> handleConflict(
@@ -92,7 +94,9 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
             UsernameNotFoundException.class,
             TaskNotFoundException.class,
             PriorityNotFoundException.class,
-            StatusNotFoundException.class
+            StatusNotFoundException.class,
+            CommentNotFoundException.class,
+            PageNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ResponseEntity<Object> handleNotFound(
@@ -144,7 +148,8 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-            RequiredRequestParamIsMissingException.class
+            RequiredRequestParamIsMissingException.class,
+            PageIllegalArgumentException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleRequiredRequestParamIsMissing(

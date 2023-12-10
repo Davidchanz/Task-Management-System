@@ -1,6 +1,6 @@
 package com.effectivemobile.TaskManagementSystem.service;
 
-import com.effectivemobile.TaskManagementSystem.dto.TaskUpdateDto;
+import com.effectivemobile.TaskManagementSystem.dto.input.task.TaskInputDto;
 import com.effectivemobile.TaskManagementSystem.exception.AccessToResourceDeniedException;
 import com.effectivemobile.TaskManagementSystem.exception.notFound.TaskNotFoundException;
 import com.effectivemobile.TaskManagementSystem.mapper.TaskMapper;
@@ -10,6 +10,8 @@ import com.effectivemobile.TaskManagementSystem.model.User;
 import com.effectivemobile.TaskManagementSystem.repository.TaskRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,11 +35,11 @@ public class TaskService {
         taskRepository.save(task);
     }
 
-    public void updateTask(User user, Long id, TaskUpdateDto taskUpdateDto) {
-        Task task = findTaskById(id);
+    public void updateTask(User user, Task task, TaskInputDto taskInputDto) {
         if(!Objects.equals(task.getAuthor().getId(), user.getId()))
-            throw new AccessToResourceDeniedException("You don't have rights to change Task with id [" + id + "]");
-        taskMapper.updateTaskFromDto(taskUpdateDto, task);
+            throw new AccessToResourceDeniedException("You don't have rights to change Task with id [" + task.getId() + "]");
+
+        taskMapper.updateTaskFromDto(taskInputDto, task);
         taskRepository.save(task);
     }
 
@@ -45,20 +47,20 @@ public class TaskService {
         Task task = findTaskById(id);
         if(!Objects.equals(task.getAuthor().getId(), user.getId()))
             throw new AccessToResourceDeniedException("You don't have rights to delete Task with id [" + id + "]");
+
         taskRepository.delete(task);
         return task;
     }
 
-    public List<Task> findTasksByAuthor(User author) {
-        return taskRepository.findAllByAuthor(author);
+    public Page<Task> findTasksByAuthor(User author, Pageable pageable) {
+        return taskRepository.findAllByAuthor(author, pageable);
     }
 
-    public List<Task> findTasksByExecutor(User executor) {
-        return taskRepository.findAllByExecutor(executor);
+    public Page<Task> findTasksByExecutor(User executor, Pageable pageable) {
+        return taskRepository.findAllByExecutor(executor, pageable);
     }
 
-    public Set<Comment> findTaskCommentsById(Long id) {
-        Task task = taskRepository.findTaskById(id).orElseThrow(() -> new TaskNotFoundException("Task with id [" + id + "] not found!"));
-        return task.getComments();
+    public void saveTask(Task task) {
+        taskRepository.save(task);
     }
 }
