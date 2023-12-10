@@ -37,7 +37,7 @@ public class TaskService {
 
     public void updateTask(User user, Task task, TaskInputDto taskInputDto) {
         if(!Objects.equals(task.getAuthor().getId(), user.getId()))
-            throw new AccessToResourceDeniedException("You don't have rights to change Task with id [" + task.getId() + "]");
+            throw new AccessToResourceDeniedException("You don't have rights to update Task with id [" + task.getId() + "]");
 
         taskMapper.updateTaskFromDto(taskInputDto, task);
         taskRepository.save(task);

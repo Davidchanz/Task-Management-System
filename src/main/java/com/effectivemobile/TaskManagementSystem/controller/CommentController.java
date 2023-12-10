@@ -81,4 +81,6 @@ public class CommentController {
         commentService.addNewComment(comment);
         return new ResponseEntity<>(new CommentDto(comment), HttpStatus.OK);
     }
+
+    //TODO Add Tests
 }

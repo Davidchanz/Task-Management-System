@@ -91,7 +91,9 @@ public class TaskController {
     }
 
     @GetMapping("/author/{username}")
-    public ResponseEntity<List<TaskDto>> getTasksByAuthor(@Valid @PathVariable String username, @Valid @RequestParam(defaultValue = "0", name = "page") Integer page){
+    public ResponseEntity<List<TaskDto>> getTasksByAuthor(
+            @Valid @PathVariable String username,
+            @Valid @RequestParam(defaultValue = "0", name = "page") Integer page){
         if(page < 0)
             throw new PageIllegalArgumentException("Page index must not be less than zero");
 
@@ -134,13 +136,17 @@ public class TaskController {
     }
 
     @PutMapping("/update/status/{id}")
-    public ResponseEntity<ApiResponse> updateTaskStatusByExecutor(@Valid @PathVariable Long id, @Valid @RequestBody(required = false) StatusDto statusDto, Principal principal){
+    public ResponseEntity<ApiResponse> updateTaskStatusByExecutor(
+            @Valid @PathVariable Long id,
+            @Valid @RequestBody(required = false) StatusDto statusDto,
+            Principal principal){
+
         if(statusDto == null)
             throw new RequiredRequestParamIsMissingException("Required request param StatusDto is missing");
         User currentUser = userService.findUserByUserName(principal.getName());
         Task task = taskService.findTaskById(id);
         if(!Objects.equals(task.getExecutor().getId(), currentUser.getId()))
-            throw new AccessToResourceDeniedException("You don't have rights to delete Task with id [" + id + "]");
+            throw new AccessToResourceDeniedException("You don't have rights to update Status Task with id [" + id + "]");
 
         task.setStatus(statusService.findStatusByName(statusDto.getName()));
         taskService.saveTask(task);

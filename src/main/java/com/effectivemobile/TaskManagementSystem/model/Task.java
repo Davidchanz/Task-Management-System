@@ -46,10 +46,6 @@ public class Task {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Priority priority;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments = new HashSet<>();
-
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private Instant createdOn;
