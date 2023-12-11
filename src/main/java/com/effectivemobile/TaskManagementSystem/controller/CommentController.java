@@ -1,9 +1,7 @@
 package com.effectivemobile.TaskManagementSystem.controller;
 
 import com.effectivemobile.TaskManagementSystem.dto.input.comment.CommentInputDto;
-import com.effectivemobile.TaskManagementSystem.dto.input.task.TaskInputDto;
 import com.effectivemobile.TaskManagementSystem.dto.output.comment.CommentDto;
-import com.effectivemobile.TaskManagementSystem.dto.output.task.TaskDto;
 import com.effectivemobile.TaskManagementSystem.exception.PageIllegalArgumentException;
 import com.effectivemobile.TaskManagementSystem.exception.RequiredRequestParamIsMissingException;
 import com.effectivemobile.TaskManagementSystem.exception.notFound.PageNotFoundException;
@@ -82,5 +80,4 @@ public class CommentController {
         return new ResponseEntity<>(new CommentDto(comment), HttpStatus.OK);
     }
 
-    //TODO Add Tests
 }

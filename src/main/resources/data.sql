@@ -1,9 +1,9 @@
 INSERT INTO USERS (username, password, email, created_on) VALUES ('admin', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin@email.com', CURRENT_TIMESTAMP);
-INSERT INTO USERS (username, password, email, created_on) VALUES ('elcin', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin1@email.com', CURRENT_TIMESTAMP);
-INSERT INTO USERS (username, password, email, created_on) VALUES ('petia', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin2@email.com', CURRENT_TIMESTAMP);
-INSERT INTO USERS (username, password, email, created_on) VALUES ('kolya', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin3@email.com', CURRENT_TIMESTAMP);
-INSERT INTO USERS (username, password, email, created_on) VALUES ('ivan', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin4@email.com', CURRENT_TIMESTAMP);
-INSERT INTO USERS (username, password, email, created_on) VALUES ('bobr', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin5@email.com', CURRENT_TIMESTAMP);
+INSERT INTO USERS (username, password, email, created_on) VALUES ('elcinBN1', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin1@email.com', CURRENT_TIMESTAMP);
+INSERT INTO USERS (username, password, email, created_on) VALUES ('petia123', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin2@email.com', CURRENT_TIMESTAMP);
+INSERT INTO USERS (username, password, email, created_on) VALUES ('kolya1978', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin3@email.com', CURRENT_TIMESTAMP);
+INSERT INTO USERS (username, password, email, created_on) VALUES ('ivan.Ag007', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin4@email.com', CURRENT_TIMESTAMP);
+INSERT INTO USERS (username, password, email, created_on) VALUES ('bobr_forest', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin5@email.com', CURRENT_TIMESTAMP);
 INSERT INTO USERS (username, password, email, created_on) VALUES ('shevchuk', '$2a$10$2dnbN.uDbYTGj2RRb2TAn.M4DWPpp0C5uo/2QUDOD5Hfl8Jx6wj6C', 'admin6@email.com', CURRENT_TIMESTAMP);
 
 INSERT INTO ROLES (name, user_id) VALUES ('ADMIN', 1);

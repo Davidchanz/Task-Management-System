@@ -2,6 +2,8 @@ package com.effectivemobile.TaskManagementSystem.dto.input.user;
 
 import com.effectivemobile.TaskManagementSystem.validation.annotation.PasswordMatches;
 import com.effectivemobile.TaskManagementSystem.validation.annotation.ValidEmail;
+import com.effectivemobile.TaskManagementSystem.validation.annotation.ValidPassword;
+import com.effectivemobile.TaskManagementSystem.validation.annotation.ValidUserName;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -12,11 +14,11 @@ import lombok.Setter;
 @PasswordMatches
 public class UserAuthDto {
     @NotNull(message = "Username must not be null!")
-    @Size(min = 5, max = 25, message = "Username must be between 5 and 25!")
+    @ValidUserName
     private String username;
 
     @NotNull(message = "Password must not be null!")
-    @Size(min = 8, max = 25, message = "Password must be between 8 and 25!")
+    @ValidPassword
     private String password;
 
     @NotNull(message = "Confirm Password must not be null!")

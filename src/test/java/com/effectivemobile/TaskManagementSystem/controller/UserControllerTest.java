@@ -60,9 +60,6 @@ class UserControllerTest extends AbstractTest{
         when(principal.getName()).thenReturn(user.getUsername());
         when(userService.findUserByUserName(user.getUsername())).thenReturn(user);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson=ow.writeValueAsString(new UserDto(user)).replaceAll("[\\t\\s]", "");
 
         var result = this.mvc.perform(get("/api/user")
@@ -82,14 +79,11 @@ class UserControllerTest extends AbstractTest{
         doReturn(user).when(userRepository).save(any(User.class));
 
         UserAuthDto userAuthDto = new UserAuthDto();
-        userAuthDto.setUsername("boris!");
+        userAuthDto.setUsername("testUser");
         userAuthDto.setEmail("admin@email.com");
         userAuthDto.setMatchingPassword("password");
         userAuthDto.setPassword("password");
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(userAuthDto);
 
         var result = this.mvc.perform(put("/api/user/update")

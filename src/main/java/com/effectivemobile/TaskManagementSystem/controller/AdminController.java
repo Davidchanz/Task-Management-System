@@ -32,9 +32,8 @@ public class AdminController {
         if(statusDto == null)
             throw new RequiredRequestParamIsMissingException("Required request param StatusDto is missing");
 
-        statusDto.setName(statusDto.getName());
         statusService.addNewStatus(statusDto);
-        return new ResponseEntity<>(new ApiResponseSingleOk("Create Status", "New Status " + statusDto + " was created!"), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponseSingleOk("Create Status", "New Status " + statusDto.getName() + " was created!"), HttpStatus.OK);
     }
 
     @GetMapping("/priority/{id}")
@@ -47,10 +46,7 @@ public class AdminController {
         if(priorityDto == null)
             throw new RequiredRequestParamIsMissingException("Required request param PriorityDto is missing");
 
-        priorityDto.setName(priorityDto.getName());
         priorityService.addNewPriority(priorityDto);
-        return new ResponseEntity<>(new ApiResponseSingleOk("Create Priority", "New Priority " + priorityDto + " was created!"), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponseSingleOk("Create Priority", "New Priority " + priorityDto.getName() + " was created!"), HttpStatus.OK);
     }
-
-    //TODO Add Tests
 }

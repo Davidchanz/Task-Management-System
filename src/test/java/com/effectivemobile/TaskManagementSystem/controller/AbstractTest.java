@@ -7,6 +7,9 @@ import com.effectivemobile.TaskManagementSystem.model.*;
 import com.effectivemobile.TaskManagementSystem.security.JwtAuthenticationEntryPoint;
 import com.effectivemobile.TaskManagementSystem.security.JwtTokenProvider;
 import com.effectivemobile.TaskManagementSystem.service.CustomUserDetailsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -50,6 +53,8 @@ public abstract class AbstractTest {
     @Mock
     public Principal principal;
 
+    public ObjectWriter ow;
+
     public User user;
 
     public User anotherUser;
@@ -65,6 +70,7 @@ public abstract class AbstractTest {
     public CustomUserDetails customUserDetails = getCustomUserDetails();
 
     {
+        ow = getObjectWriter();
         user = getUser();
         anotherUser = getAnotherUser();
         status = getStatus();
@@ -83,6 +89,13 @@ public abstract class AbstractTest {
         token = jwtTokenProvider.generateToken(customUserDetails);
         headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
+    }
+
+    public ObjectWriter getObjectWriter(){
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        return ow;
     }
 
     public CustomUserDetails getCustomUserDetails(){
@@ -115,14 +128,14 @@ public abstract class AbstractTest {
     public Status getStatus(){
         Status status = new Status();
         status.setId(1L);
-        status.setName("Open");
+        status.setName("OPEN");
         return status;
     }
 
     public Priority getPriority(){
         Priority priority = new Priority();
         priority.setId(1L);
-        priority.setName("Low");
+        priority.setName("LOW");
         return priority;
     }
 

@@ -23,7 +23,7 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 25)
+    @Column(unique = true, nullable = false, length = 20)
     @NotNull
     private String username;
 

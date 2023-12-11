@@ -119,9 +119,6 @@ public class TaskControllerTest extends AbstractTest{
         doCallRealMethod().when(taskService).addNewTask(any(Task.class));
         when(taskRepository.save(any(Task.class))).thenReturn(newTask);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(taskInputDto);
 
         var result = this.mvc.perform(post("/api/task/add")
@@ -143,9 +140,6 @@ public class TaskControllerTest extends AbstractTest{
         doCallRealMethod().when(taskService).updateTask(any(User.class), any(Task.class), any(TaskInputDto.class));
         when(taskRepository.save(any(Task.class))).thenReturn(task);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(taskInputDto);
 
         var result = this.mvc.perform(put("/api/task/update/{id}", 1)
@@ -220,9 +214,6 @@ public class TaskControllerTest extends AbstractTest{
         doCallRealMethod().when(taskService).saveTask(any(Task.class));
         when(taskRepository.save(any(Task.class))).thenReturn(task);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(statusDto);
 
         var result = this.mvc.perform(put("/api/task/update/status/{id}", 1)

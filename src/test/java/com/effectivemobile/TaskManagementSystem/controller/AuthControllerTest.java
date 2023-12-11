@@ -67,9 +67,6 @@ public class AuthControllerTest extends AbstractTest{
         loginDto.setUsername("admin");
         loginDto.setPassword("password");
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson=ow.writeValueAsString(loginDto);
 
         MvcResult result = this.mvc.perform(post("/api/auth/login")
@@ -86,9 +83,6 @@ public class AuthControllerTest extends AbstractTest{
         loginDto.setUsername("admin");
         loginDto.setPassword("password");
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(loginDto);
 
         this.mvc.perform(post("/api/auth/login")
@@ -102,13 +96,10 @@ public class AuthControllerTest extends AbstractTest{
     void Register_Success() throws Exception {
         UserAuthDto userAuthDto = new UserAuthDto();
         userAuthDto.setEmail("admin@email.com");
-        userAuthDto.setUsername("admin");
+        userAuthDto.setUsername("testUser");
         userAuthDto.setMatchingPassword("password");
         userAuthDto.setPassword("password");
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(userAuthDto);
 
         MvcResult result = this.mvc.perform(post("/api/auth/registration")
