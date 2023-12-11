@@ -1,5 +1,6 @@
 package com.effectivemobile.TaskManagementSystem.advice;
 
+import com.effectivemobile.TaskManagementSystem.dto.StatusDto;
 import com.effectivemobile.TaskManagementSystem.dto.output.response.ApiErrorDto;
 import com.effectivemobile.TaskManagementSystem.dto.output.response.ErrorDto;
 import com.effectivemobile.TaskManagementSystem.exception.*;
@@ -9,6 +10,10 @@ import com.effectivemobile.TaskManagementSystem.exception.exist.PriorityAlreadyE
 import com.effectivemobile.TaskManagementSystem.exception.exist.StatusAlreadyExistException;
 import com.effectivemobile.TaskManagementSystem.exception.exist.UserAlreadyExistException;
 import com.effectivemobile.TaskManagementSystem.exception.notFound.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -81,13 +86,13 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
             StatusAlreadyExistException.class
     })
     @ResponseStatus(HttpStatus.CONFLICT)
-    protected ResponseEntity<Object> handleConflict(
+    protected ResponseEntity<ApiErrorDto> handleConflict(
             RuntimeException ex, WebRequest request) {
         ApiErrorDto errorDto = new ApiErrorDto(HttpStatus.CONFLICT,
                 ((ServletWebRequest)request).getRequest().getRequestURI().toString(),
                 new ErrorDto(ex.getClass().getName(), ex.getMessage())
         );
-        return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.CONFLICT, request);
+        return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = {
@@ -99,52 +104,52 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
             PageNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    protected ResponseEntity<Object> handleNotFound(
+    protected ResponseEntity<ApiErrorDto> handleNotFound(
             RuntimeException ex, WebRequest request) {
         ApiErrorDto errorDto = new ApiErrorDto(HttpStatus.NOT_FOUND,
                 ((ServletWebRequest)request).getRequest().getRequestURI().toString(),
                 new ErrorDto(ex.getClass().getName(), ex.getMessage())
         );
-        return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = {
             AccessToResourceDeniedException.class
     })
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    protected ResponseEntity<Object> handleForbidden(
+    protected ResponseEntity<ApiErrorDto> handleForbidden(
             RuntimeException ex, WebRequest request) {
         ApiErrorDto errorDto = new ApiErrorDto(HttpStatus.FORBIDDEN,
                 ((ServletWebRequest)request).getRequest().getRequestURI().toString(),
                 new ErrorDto(ex.getClass().getName(), ex.getMessage())
         );
-        return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+        return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = {
             InvalidTokenRequestException.class
     })
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    protected ResponseEntity<Object> handleInvalidToken(
+    protected ResponseEntity<ApiErrorDto> handleInvalidToken(
             RuntimeException ex, WebRequest request) {
         ApiErrorDto errorDto = new ApiErrorDto(HttpStatus.UNAUTHORIZED,
                 ((ServletWebRequest)request).getRequest().getRequestURI().toString(),
                 new ErrorDto(ex.getClass().getName(), ex.getMessage())
         );
-        return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+        return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = {
             UserLoginException.class
     })
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    protected ResponseEntity<Object> handleLoginBadCredentials(
+    protected ResponseEntity<ApiErrorDto> handleLoginBadCredentials(
             RuntimeException ex, WebRequest request) {
         ApiErrorDto errorDto = new ApiErrorDto(HttpStatus.UNAUTHORIZED,
                 ((ServletWebRequest)request).getRequest().getRequestURI().toString(),
                 new ErrorDto(ex.getClass().getName(), "Bad credentials! Invalid Username or Password")
         );
-        return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+        return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = {
@@ -152,13 +157,13 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
             PageIllegalArgumentException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ResponseEntity<Object> handleRequiredRequestParamIsMissing(
+    protected ResponseEntity<ApiErrorDto> handleRequiredRequestParamIsMissing(
             RuntimeException ex, WebRequest request) {
         ApiErrorDto errorDto = new ApiErrorDto(HttpStatus.BAD_REQUEST,
                 ((ServletWebRequest)request).getRequest().getRequestURI().toString(),
                 new ErrorDto(ex.getClass().getName(), ex.getMessage())
         );
-        return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -178,6 +183,5 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
         );
         return handleExceptionInternal(ex, errorDto, new HttpHeaders(), HttpStatus.METHOD_NOT_ALLOWED, request);
     }
-
 
 }

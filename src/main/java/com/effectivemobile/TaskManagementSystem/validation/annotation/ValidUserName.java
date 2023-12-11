@@ -17,7 +17,7 @@ public @interface ValidUserName {
             "Underscore and dot can't be at the end or start of a username (e.g _username / username_ / .username / username.)"
             "Underscore and dot can't be next to each other (e.g user_.name)"
             "Underscore or dot can't be used multiple times in a row (e.g user__name / user..name)"
-            "Number of characters must be between 8 to 20"
+            "Number of characters must be between 5 to 20"
             """;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

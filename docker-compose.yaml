@@ -9,19 +9,19 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: taskmangedb
 
-  #spring-app:
-  #  image: docker-spring-boot-postgres:latest
-  #  build: .
-  #  restart: always
-  #  container_name: task-management-system-backend
-  #  ports:
-  #   - 8080:8080
-  #  depends_on:
-  #   - db
-  #  environment:
-  #    SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/taskmangedb
-  #    SPRING_DATASOURCE_USERNAME: postgres
-  #    SPRING_DATASOURCE_PASSWORD: password
-  #    SPRING_JPA_HIBERNATE_DDL_AUTO: create
-  #    SPRING_SQL_INIT_MODE: always
+  spring-app:
+    image: task_management_system:latest
+    build: .
+    restart: always
+    container_name: task-management-system-backend
+    ports:
+     - 8080:8080
+    depends_on:
+     - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/taskmangedb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
+      SPRING_SQL_INIT_MODE: always
 

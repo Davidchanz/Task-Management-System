@@ -82,8 +82,10 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().
-                requestMatchers(new AntPathRequestMatcher("/h2-console/**"))//TODO swagger
+        return (web) -> web.ignoring()
+                .requestMatchers(new AntPathRequestMatcher( "/v3/api-docs/**"))
+                .requestMatchers(new AntPathRequestMatcher( "/swagger-ui/**"))
+                .requestMatchers(new AntPathRequestMatcher( "/swagger-ui.html"))
                 .requestMatchers(new AntPathRequestMatcher( "/favicon.ico"))
                 .requestMatchers(new AntPathRequestMatcher( "/css/**"))
                 .requestMatchers(new AntPathRequestMatcher( "/js/**"))
@@ -104,7 +106,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(conf -> conf.authenticationEntryPoint(jwtEntryPoint))
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers(new MvcRequestMatcher(introspector, "/h2-console/**"))//todo swagger
+                        .requestMatchers(new MvcRequestMatcher(introspector, "/v3/api-docs/**"))
+                        .permitAll()
+                        .requestMatchers(new MvcRequestMatcher(introspector, "/swagger-ui/**"))
+                        .permitAll()
+                        .requestMatchers(new MvcRequestMatcher(introspector, "/swagger-ui.html"))
                         .permitAll()
                         .requestMatchers(new MvcRequestMatcher(introspector, "/api/auth/**"))
                         .permitAll()

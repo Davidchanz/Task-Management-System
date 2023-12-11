@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class UserNameValidator implements ConstraintValidator<ValidUserName, String> {
     private Pattern pattern;
     private Matcher matcher;
-    private static final String USERNAME_PATTERN = "^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$";
+    private static final String USERNAME_PATTERN = "^(?=.{5,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$";
     @Override
     public void initialize(ValidUserName constraintAnnotation) {
 

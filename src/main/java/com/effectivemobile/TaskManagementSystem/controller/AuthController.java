@@ -10,6 +10,11 @@ import com.effectivemobile.TaskManagementSystem.model.CustomUserDetails;
 import com.effectivemobile.TaskManagementSystem.model.User;
 import com.effectivemobile.TaskManagementSystem.service.AuthService;
 import com.effectivemobile.TaskManagementSystem.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,8 +36,17 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Operation(summary = "Register New User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Register New User",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApiResponseSingleOk.class)) }
+            ),
+            @ApiResponse(responseCode = "400", description = "If RequestBody is missing"),
+            @ApiResponse(responseCode = "409", description = "If User with specify username or email already exist")
+    })
     @PostMapping("/registration")
-    public ResponseEntity<?> register(@Valid @RequestBody(required = false) UserAuthDto userAuthDto){
+    public ResponseEntity<ApiResponseSingleOk> register(@Valid @RequestBody(required = false) UserAuthDto userAuthDto){
         if(userAuthDto == null)
             throw new RequiredRequestParamIsMissingException("Required request param UserAuthDto is missing");
 
@@ -41,11 +55,21 @@ public class AuthController {
         user.setPassword(userAuthDto.getPassword());
         user.setEmail(userAuthDto.getEmail());
         userService.registerNewUserAccount(user);
-        return new ResponseEntity<>(new ApiResponseSingleOk("Registration", "User '" + user.getUsername() + "' successfully created!"), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponseSingleOk(
+                "Registration", "User '" + user.getUsername() + "' successfully created!"), HttpStatus.OK);
     }
 
+    @Operation(summary = "LogIn")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "LogIn",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TokenDto.class)) }
+            ),
+            @ApiResponse(responseCode = "400", description = "If RequestBody is missing"),
+            @ApiResponse(responseCode = "401", description = "If username/password is wrong")
+    })
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody(required = false) LoginDto loginRequest){
+    public ResponseEntity<TokenDto> login(@RequestBody(required = false) LoginDto loginRequest){
         if(loginRequest == null)
             throw new RequiredRequestParamIsMissingException("Required request param LoginDto is missing");
 
