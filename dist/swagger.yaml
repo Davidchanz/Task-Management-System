@@ -1,0 +1,1173 @@
+openapi: 3.0.1
+info:
+  title: Backend API For the TaskManagementSystem
+  description: Backend API For the TaskManagementSystem
+  license:
+    name: Apache 2.0
+    url: 'http://springdoc.org'
+  version: v0.0.1
+externalDocs:
+  description: Security Description
+  url: 'https://github.com/Davidchanz/Task-Management-System'
+servers:
+  - url: 'http://localhost:8080'
+    description: Generated server url
+paths:
+  /api/user/update:
+    put:
+      tags:
+        - user-controller
+      summary: Update Current User
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuthDto'
+      responses:
+        '200':
+          description: Update Current User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseSingleOk'
+        '400':
+          description: If RequestBody is missing
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/task/update/{id}':
+    put:
+      tags:
+        - task-controller
+      summary: Update Task
+      operationId: updateTask
+      parameters:
+        - name: id
+          in: path
+          description: Task id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskInputDto'
+      responses:
+        '200':
+          description: Update Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseSingleOk'
+        '400':
+          description: 'If RequestBody, {id} is missing'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: If current User is Not Task's Author
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: 'If Task, Status, Priority not found'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/task/update/status/{id}':
+    put:
+      tags:
+        - task-controller
+      summary: Update Task's Status by Executor
+      description: Update Task Status if current user is Task's Executor
+      operationId: updateTaskStatusByExecutor
+      parameters:
+        - name: id
+          in: path
+          description: Task id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusDto'
+      responses:
+        '200':
+          description: Update Task's Status by Executor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseSingleOk'
+        '400':
+          description: 'If RequestBody, {id} is missing'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: If current User is Not Task's Executor
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: 'If Task, Status not found'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  /api/task/add:
+    post:
+      tags:
+        - task-controller
+      summary: Add New Task
+      operationId: addNewTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskInputDto'
+      responses:
+        '200':
+          description: Add New Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
+        '400':
+          description: If RequestBody is missing
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: 'If Status, Priority not found'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/comment/add/{id}':
+    post:
+      tags:
+        - comment-controller
+      summary: Add Comment to Task
+      operationId: addCommentToTask
+      parameters:
+        - name: id
+          in: path
+          description: Task id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentInputDto'
+      responses:
+        '200':
+          description: Add Comment to Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentDto'
+        '400':
+          description: 'If RequestBody, {id} is missing'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: If Task not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  /api/auth/registration:
+    post:
+      tags:
+        - auth-controller
+      summary: Register New User
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuthDto'
+      responses:
+        '200':
+          description: Register New User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseSingleOk'
+        '400':
+          description: If RequestBody is missing
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: If User with specify username or email already exist
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  /api/auth/login:
+    post:
+      tags:
+        - auth-controller
+      summary: LogIn
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: LogIn
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenDto'
+        '400':
+          description: If RequestBody is missing
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: If username/password is wrong
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  /api/admin/status/add:
+    post:
+      tags:
+        - admin-controller
+      summary: Add New Status
+      operationId: addNewStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusDto'
+      responses:
+        '200':
+          description: Add New Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseSingleOk'
+        '400':
+          description: If RequestBody is missing
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: If Status with specify name already exist
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  /api/admin/priority/add:
+    post:
+      tags:
+        - admin-controller
+      summary: Add New Priority
+      operationId: addNewPriority
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PriorityDto'
+      responses:
+        '200':
+          description: Add New Priority
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseSingleOk'
+        '400':
+          description: If RequestBody is missing
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: If Priority with specify name already exist
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  /api/user:
+    get:
+      tags:
+        - user-controller
+      summary: Get Current User
+      operationId: getUser
+      responses:
+        '200':
+          description: Get Current User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/task/{id}':
+    get:
+      tags:
+        - task-controller
+      summary: Get Task
+      operationId: getTask
+      parameters:
+        - name: id
+          in: path
+          description: Task id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      responses:
+        '200':
+          description: Get Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
+        '400':
+          description: 'If {id} is missing'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: If Task not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/task/executor/{username}':
+    get:
+      tags:
+        - task-controller
+      summary: Get All Tasks with specify Executor
+      description: 'Get All Tasks which have relation with Executor with username {username}'
+      operationId: getTasksByExecutor
+      parameters:
+        - name: username
+          in: path
+          description: Executor's username
+          required: true
+          schema:
+            type: string
+          example: admin
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+      responses:
+        '200':
+          description: Get All Tasks with specify Executor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskDto'
+        '400':
+          description: 'If {username} is missing, page < 0'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: If page not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/task/author/{username}':
+    get:
+      tags:
+        - task-controller
+      summary: Get All Author's Tasks
+      description: 'Get All Tasks with was created by User with username {username}'
+      operationId: getTasksByAuthor
+      parameters:
+        - name: username
+          in: path
+          description: Author's username
+          required: true
+          schema:
+            type: string
+          example: admin
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+      responses:
+        '200':
+          description: Get All Author's Tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskDto'
+        '400':
+          description: 'If {username} is missing, page < 0'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: If page not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/comment/{id}':
+    get:
+      tags:
+        - comment-controller
+      summary: Get Comment
+      operationId: getComment
+      parameters:
+        - name: id
+          in: path
+          description: Comment id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      responses:
+        '200':
+          description: Get Comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentDto'
+        '400':
+          description: 'If {id} is missing'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: If Comment not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/comment/task/{id}':
+    get:
+      tags:
+        - comment-controller
+      summary: Get All Task's Comments
+      operationId: getCommentsByTask
+      parameters:
+        - name: id
+          in: path
+          description: Task id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+      responses:
+        '200':
+          description: Get All Task's Comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDto'
+        '400':
+          description: 'If {id} is missing, page < 0'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: If page not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/admin/status/{id}':
+    get:
+      tags:
+        - admin-controller
+      summary: Get Status
+      operationId: getStatus
+      parameters:
+        - name: id
+          in: path
+          description: Status id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      responses:
+        '200':
+          description: Get Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusDto'
+        '400':
+          description: 'If {id} is missing'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: If Status not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/admin/priority/{id}':
+    get:
+      tags:
+        - admin-controller
+      summary: Get Priority
+      operationId: getPriority
+      parameters:
+        - name: id
+          in: path
+          description: Priority id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      responses:
+        '200':
+          description: Get Priority
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorityDto'
+        '400':
+          description: 'If {id} is missing'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: If Priority not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+  '/api/task/delete/{id}':
+    delete:
+      tags:
+        - task-controller
+      summary: Delete Task
+      description: Delete Task if it is yours
+      operationId: deleteTask
+      parameters:
+        - name: id
+          in: path
+          description: Task id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1
+      responses:
+        '200':
+          description: Delete Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseSingleOk'
+        '400':
+          description: 'If {id} is missing'
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '403':
+          description: If current User is Not Task's Author
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+        '409':
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiErrorDto'
+components:
+  schemas:
+    ApiErrorDto:
+      required:
+        - created
+        - errors
+        - instance
+        - status
+        - title
+      type: object
+      properties:
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        instance:
+          type: string
+        created:
+          type: string
+          format: date-time
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDto'
+    ErrorDto:
+      required:
+        - description
+        - error
+      type: object
+      properties:
+        error:
+          type: string
+        description:
+          type: string
+    UserAuthDto:
+      required:
+        - email
+        - matchingPassword
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        matchingPassword:
+          type: string
+        email:
+          type: string
+    ApiResponseSingleOk:
+      required:
+        - createdOn
+        - response
+        - status
+        - title
+      type: object
+      properties:
+        createdOn:
+          type: string
+          format: date-time
+        status:
+          type: integer
+          format: int32
+        title:
+          type: string
+        response:
+          maxLength: 1000
+          minLength: 0
+          type: string
+    TaskInputDto:
+      required:
+        - description
+        - executor
+        - priority
+        - status
+        - title
+      type: object
+      properties:
+        title:
+          maxLength: 128
+          minLength: 10
+          type: string
+        description:
+          maxLength: 128
+          minLength: 0
+          type: string
+        executor:
+          type: string
+        status:
+          type: integer
+          format: int64
+        priority:
+          type: integer
+          format: int64
+    StatusDto:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 32
+          minLength: 1
+          type: string
+    PriorityDto:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 32
+          minLength: 1
+          type: string
+    TaskDto:
+      required:
+        - author
+        - createdOn
+        - description
+        - executor
+        - id
+        - lastUpdatedOn
+        - priority
+        - status
+        - title
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        author:
+          $ref: '#/components/schemas/UserDto'
+        executor:
+          $ref: '#/components/schemas/UserDto'
+        status:
+          $ref: '#/components/schemas/StatusDto'
+        priority:
+          $ref: '#/components/schemas/PriorityDto'
+        createdOn:
+          type: string
+          format: date-time
+        lastUpdatedOn:
+          type: string
+          format: date-time
+    UserDto:
+      required:
+        - createdOn
+        - email
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        createdOn:
+          type: string
+          format: date-time
+    CommentInputDto:
+      required:
+        - text
+      type: object
+      properties:
+        text:
+          maxLength: 1024
+          minLength: 10
+          type: string
+    CommentDto:
+      required:
+        - author
+        - createdOn
+        - id
+        - lastUpdatedOn
+        - text
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        text:
+          type: string
+        author:
+          $ref: '#/components/schemas/UserDto'
+        createdOn:
+          type: string
+          format: date-time
+        lastUpdatedOn:
+          type: string
+          format: date-time
+    LoginDto:
+      required:
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    TokenDto:
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+
